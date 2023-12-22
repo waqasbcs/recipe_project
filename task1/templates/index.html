@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %} Table{% endblock %}
+
+{% block content %}
+    <h2>Student Table</h2>
+
+    <!-- Table with Bootstrap classes -->
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>S.No</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>City</th>
+                <th>Can Vote</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for people in peoples %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ people.name }}</td>
+                <td>{{ people.age }}</td>
+                <td>{{ people.city }}</td>
+                <td>
+                    {% if people.age <= '22' %}
+                    <span class="yes">&#x1F44D;</span> <!-- Thumbs up emoji -->
+                    {% else %}
+                    <span class="no">&#x1F44E;</span> <!-- Thumbs down emoji -->
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

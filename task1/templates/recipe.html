@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Add and Display Recipes{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <h5 class="card-header bg-success text-white">Add a New Recipe</h5>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="recipeName" class="form-label">Recipe Name</label>
+                            <input type="text" class="form-control" id="recipeName" name="recipe_name" required {% if recipe %}value="{{ recipe.recipe_name }}"{% endif %}>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="recipeDescription" class="form-label">Recipe Description</label>
+                            <textarea class="form-control" id="recipeDescription" name="recipe_description" rows="4" required>{% if recipe %}{{ recipe.recipe_description }}{% endif %}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="recipeImage" class="form-label">Recipe Image</label>
+                            <input type="file" class="form-control" id="recipeImage" name="recipe_image" accept="image/*" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <h5 class="card-header bg-info text-white">Recipe List</h5>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>S.No</th>
+                                <th>Recipe Name</th>
+                                <th>Description</th>
+                                <th>Recipe Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recipe in recipe %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ recipe.recipe_name }}</td>
+                                <td>{{ recipe.recipe_description }}</td>
+                                <td>
+                                    {% if recipe.recipe_image %}
+                                        <img src="{{ recipe.recipe_image.url }}" alt="{{ recipe.recipe_name }} Image" style="max-width: 100px; max-height: 100px;">
+                                    {% else %}
+                                        No Image
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
