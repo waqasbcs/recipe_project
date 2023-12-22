@@ -26,8 +26,9 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('recipe/', views.recipe, name='recipe'),
-    path('learnm/', views.learn_math),
-    path('learnf/', views.learn_format),
+    path('recipe/<int:recipe_id>/delete/', views.delete_recipe, name='delete_recipe'),
+    path('recipe/<int:recipe_id>/update/', views.update_recipe, name='update_recipe'),
+    
 ]
 
 # Serve media files during development

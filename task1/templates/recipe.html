@@ -5,63 +5,96 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row">
+        <!-- Add Recipe Form Column -->
         <div class="col-md-6">
             <div class="card">
+                <!-- Add Recipe Card Header -->
                 <h5 class="card-header bg-success text-white">Add a New Recipe</h5>
                 <div class="card-body">
+                    <!-- Add Recipe Form -->
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        
                         <div class="mb-3">
                             <label for="recipeName" class="form-label">Recipe Name</label>
-                            <input type="text" class="form-control" id="recipeName" name="recipe_name" required {% if recipe %}value="{{ recipe.recipe_name }}"{% endif %}>
+                            <input type="text" class="form-control" id="recipeName" name="recipe_name" required>
                         </div>
-
                         <div class="mb-3">
                             <label for="recipeDescription" class="form-label">Recipe Description</label>
-                            <textarea class="form-control" id="recipeDescription" name="recipe_description" rows="4" required>{% if recipe %}{{ recipe.recipe_description }}{% endif %}</textarea>
+                            <textarea class="form-control" id="recipeDescription" name="recipe_description" rows="4" required></textarea>
                         </div>
-
                         <div class="mb-3">
                             <label for="recipeImage" class="form-label">Recipe Image</label>
                             <input type="file" class="form-control" id="recipeImage" name="recipe_image" accept="image/*" required>
                         </div>
-
                         <button type="submit" class="btn btn-success">Add</button>
                     </form>
                 </div>
             </div>
         </div>
+        <!-- Recipe List Column -->
         <div class="col-md-6">
             <div class="card">
+                <!-- Recipe List Card Header -->
                 <h5 class="card-header bg-info text-white">Recipe List</h5>
                 <div class="card-body">
-                    <table class="table table-bordered table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>S.No</th>
-                                <th>Recipe Name</th>
-                                <th>Description</th>
-                                <th>Recipe Image</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for recipe in recipe %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ recipe.recipe_name }}</td>
-                                <td>{{ recipe.recipe_description }}</td>
-                                <td>
-                                    {% if recipe.recipe_image %}
-                                        <img src="{{ recipe.recipe_image.url }}" alt="{{ recipe.recipe_name }} Image" style="max-width: 100px; max-height: 100px;">
-                                    {% else %}
-                                        No Image
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <!-- Search Bar -->
+                    <form method="GET" action="{% url 'recipe' %}">
+                        <div class="input-group mb-3">
+                            <input name="search" class="form-control" placeholder="Search Recipe..." aria-label="Search Recipe" aria-describedby="searchButton">
+                            <button type="submit" class="btn btn-outline-secondary" id="searchButton">Search</button>
+                        </div>
+                    </form>
+                    
+                    <!-- Recipe Table -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="thead-dark">
+                                <!-- Table Header -->
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Recipe Name</th>
+                                    <th>Description</th>
+                                    <th>Recipe Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Loop through recipes -->
+                                {% for recipe in recipe %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ recipe.recipe_name }}</td>
+                                    <td>
+                                        <p class="description">
+                                            {% if recipe.recipe_description|length > 50 %}
+                                                {{ recipe.recipe_description|truncatechars:50 }}
+                                                <a href="#" class="read-more">Read More</a>
+                                            {% else %}
+                                                {{ recipe.recipe_description }}
+                                            {% endif %}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        {% if recipe.recipe_image %}
+                                            <img src="{{ recipe.recipe_image.url }}" alt="{{ recipe.recipe_name }} Image" style="max-width: 100px; max-height: 100px;" class="img-thumbnail">
+                                        {% else %}
+                                            No Image
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <!-- Delete Button -->
+                                        <form method="POST" action="{% url 'delete_recipe' recipe.id %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                        <!-- Edit Button -->
+                                        <a href="{% url 'update_recipe' recipe.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
