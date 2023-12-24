@@ -3,9 +3,10 @@ from django.http import HttpResponse
 from .models import Recipe
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login,logout as auth_logout
+from django.contrib.auth.decorators import login_required
 
-
+@login_required(login_url="/login/")
 def index(request):
     peoples = [
         {'name': 'waqas','age':'20','city': 'lohore',},
@@ -22,6 +23,7 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 
+@login_required(login_url="/login/")
 def recipe(request):
     queryset = Recipe.objects.all()
 
@@ -45,7 +47,6 @@ def recipe(request):
         return render(request, 'recipe.html', context)  
 
     return HttpResponseNotAllowed(['GET', 'POST'])
-
 
 def delete_recipe(request, recipe_id):
     if request.method == 'POST':
@@ -125,3 +126,10 @@ def register(request):
         return redirect('/login/')  # Change this to your desired redirect URL
     
     return render(request, 'register.html')
+
+
+def logout(request):
+    auth_logout(request)
+    return redirect('/login/')  
+    
+    

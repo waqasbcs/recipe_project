@@ -30,6 +30,8 @@ urlpatterns = [
     path('recipe/<int:recipe_id>/update/', views.update_recipe, name='update_recipe'),
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),
+    path('logout/', views.logout, name='logout'),
+    
     
     
 ]
